@@ -8,4 +8,5 @@
     { "source": "/profile", "destination": "/profile/index.html" },
     { "source": "/about", "destination": "/about/index.html" },
     { "source": "/main", "destination": "/main.html" }
+  ]
 }
