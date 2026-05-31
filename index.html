@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WorkingEveryday</title>
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background: url("indexbg.jpg") no-repeat center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    backdrop-filter: blur(12px);
+    background: rgba(0,0,0,0.6);
+    padding: 48px 44px 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    width: 340px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+.logo {
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-bottom: 16px;
+}
+
+.tagline {
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.sub {
+    font-size: 13px;
+    color: #bbb;
+    margin-bottom: 32px;
+    line-height: 1.5;
+}
+
+/* main buttons row */
+.main-btns {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+/* try it out full width */
+.try-btn {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+/* secondary row */
+.secondary-btns {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* base button */
+.btn {
+    height: 2.5em;
+    padding: 0 1.2em;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 0.625em;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.btn-wide {
+    width: 8.5em;
+}
+
+.btn-sm {
+    height: 2em;
+    padding: 0 1em;
+    font-size: 13px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 0.625em;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* color variants */
+.btn-blue  { background: #2563eb; }
+.btn-green { background: #16a34a; }
+
+/* hover text color */
+.btn:hover, .btn-sm:hover { color: black; }
+
+/* sweep effect */
+.btn:after, .btn-sm:after {
+    content: "";
+    background: white;
+    position: absolute;
+    z-index: -1;
+    left: -20%; right: -20%;
+    top: 0; bottom: 0;
+    transform: skewX(-45deg) scale(0,1);
+    transition: all 0.5s;
+}
+.btn:hover:after, .btn-sm:hover:after {
+    transform: skewX(-45deg) scale(1,1);
+}
+
+/* try it out */
+.btn-full {
+    width: 87.57%;
+    height: 2.5em;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 0.625em;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+.btn-full:hover { color: black; }
+.btn-full:after {
+    content: "";
+    background: white;
+    position: absolute;
+    z-index: -1;
+    left: -20%; right: -20%;
+    top: 0; bottom: 0;
+    transform: skewX(-45deg) scale(0,1);
+    transition: all 0.5s;
+}
+.btn-full:hover:after { transform: skewX(-45deg) scale(1,1); }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="logo">WorkingEveryday</div>
+
+    <div class="tagline">The Essential<br>for Every Worker</div>
+    <div class="sub">Chat, files, announcements and more —<br>all in one place for teams.</div>
+
+    <div class="main-btns">
+        <button class="btn btn-wide btn-blue" onclick="location.href='/login'">Sign In</button>
+        <button class="btn btn-wide btn-green" onclick="location.href='/signup'">Sign Up</button>
+    </div>
+
+    <button class="btn-full" onclick="location.href='/main'">Try it out ↗</button>
+
+    <div class="secondary-btns">
+        <button class="btn-sm" onclick="location.href='/about'">About</button>
+        <button class="btn-sm" onclick="location.href='https://github.com/yaoyu0906-cmd/WorkingEveryDay'" target="_blank">Source Code</button>
+    </div>
+
+</div>
+</body>
+</html>
