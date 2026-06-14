@@ -1,16 +1,23 @@
 {
   "rewrites": [
-    { "source": "/personal",               "destination": "/personal/index.html" },
-    { "source": "/personal/tools",         "destination": "/personal/tools/index.html" },
-    { "source": "/personal/tools/calendar","destination": "/personal/tools/calendar/index.html" },
-    { "source": "/personal/tools/notes",   "destination": "/personal/tools/notes/index.html" },
-    { "source": "/personal/files",         "destination": "/personal/files/index.html" },
-    { "source": "/personal/tasks",         "destination": "/personal/tasks/index.html" },
-    { "source": "/helloworld",             "destination": "/helloworld/index.html" },
-    { "source": "/helloworld/tools",       "destination": "/helloworld/tools/index.html" },
-    { "source": "/helloworld/tools/calendar","destination": "/helloworld/tools/calendar/index.html" },
-    { "source": "/helloworld/files",       "destination": "/helloworld/files/index.html" },
-    { "source": "/helloworld/tasks",       "destination": "/helloworld/tasks/index.html" },
-    { "source": "/add",                    "destination": "/add/index.html" }
+    { "source": "/personal", "destination": "/personal/index.html" },
+    { "source": "/personal/tools", "destination": "/personal/tools/index.html" },
+    { "source": "/personal/tools/calendar", "destination": "/personal/tools/calendar/index.html" },
+    { "source": "/personal/tools/notes", "destination": "/personal/tools/notes/index.html" },
+    { "source": "/personal/files", "destination": "/personal/files/index.html" },
+    { "source": "/personal/tasks", "destination": "/personal/tasks/index.html" },
+
+    { "source": "/helloworld", "destination": "/helloworld/index.html" },
+    { "source": "/helloworld/tools", "destination": "/helloworld/tools/index.html" },
+    { "source": "/helloworld/tools/calendar", "destination": "/helloworld/tools/calendar/index.html" },
+    { "source": "/helloworld/files", "destination": "/helloworld/files/index.html" },
+    { "source": "/helloworld/tasks", "destination": "/helloworld/tasks/index.html" },
+
+    { "source": "/add", "destination": "/add/index.html" },
+    { "source": "/login", "destination": "/login/index.html" },
+    { "source": "/signup", "destination": "/signup/index.html" },
+    { "source": "/profile", "destination": "/profile/index.html" },
+    { "source": "/about", "destination": "/about/index.html" },
+    { "source": "/main", "destination": "/main.html" }
   ]
 }
