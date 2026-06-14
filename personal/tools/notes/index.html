@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Notes — Personal</title>
+<style>
+body{margin:0;font-family:Arial;background:url("../../../indexbg.jpg") no-repeat center/cover;min-height:100vh;color:white;display:flex;flex-direction:column;}
+.navbar{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);flex-shrink:0;}
+.logo{font-size:22px;font-weight:bold;}
+.nav-left{display:flex;align-items:center;gap:12px;}
+.badge{font-size:11px;color:#aaa;background:rgba(255,255,255,0.1);padding:3px 10px;border-radius:20px;letter-spacing:1px;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.btn{width:6.5em;height:2.3em;margin:0.3em;background:black;color:white;border:none;border-radius:0.625em;font-size:16px;font-weight:bold;cursor:pointer;position:relative;z-index:1;overflow:hidden;}
+.btn-sm{width:5em;height:2.3em;background:black;color:white;border:none;border-radius:0.625em;font-size:14px;font-weight:bold;cursor:pointer;position:relative;z-index:1;overflow:hidden;}
+.btn-full{width:100%;height:2.3em;background:black;color:white;border:none;border-radius:0.625em;font-size:14px;font-weight:bold;cursor:pointer;position:relative;z-index:1;overflow:hidden;margin-bottom:6px;}
+button:hover{color:black;}
+button:after{content:"";background:white;position:absolute;z-index:-1;left:-20%;right:-20%;top:0;bottom:0;transform:skewX(-45deg) scale(0,1);transition:all 0.5s;}
+button:hover:after{transform:skewX(-45deg) scale(1,1);}
+.layout{display:flex;gap:12px;flex:1;padding:20px 24px;max-width:820px;width:100%;margin:0 auto;box-sizing:border-box;min-height:0;}
+.sidebar{width:190px;flex-shrink:0;display:flex;flex-direction:column;gap:6px;}
+.note-item{background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:9px 12px;cursor:pointer;}
+.note-item:hover,.note-item.active{background:rgba(255,255,255,0.1);}
+.note-item-title{font-size:13px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.note-item-preview{font-size:11px;color:rgba(255,255,255,0.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.editor{flex:1;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.12);backdrop-filter:blur(12px);border-radius:12px;display:flex;flex-direction:column;min-height:0;}
+.editor-top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.08);gap:10px;}
+.editor-title{background:transparent;border:none;color:white;font-size:15px;font-weight:bold;outline:none;flex:1;}
+.editor-title::placeholder{color:rgba(255,255,255,0.25);}
+textarea{flex:1;background:transparent;border:none;color:white;font-size:13px;line-height:1.6;padding:14px 16px;resize:none;outline:none;font-family:Arial;min-height:0;}
+textarea::placeholder{color:rgba(255,255,255,0.2);}
+</style>
+</head>
+<body>
+<div class="navbar">
+  <div class="nav-left">
+    <div class="logo">WorkingEveryday</div>
+    <span class="badge">🏠 Personal</span>
+  </div>
+  <div class="nav-right">
+    <button class="btn-sm" onclick="location.href='/personal/tools'">← Back</button>
+    <button class="btn" onclick="location.href='/profile'">Profile</button>
+  </div>
+</div>
+<div class="layout">
+  <div class="sidebar">
+    <button class="btn-full" onclick="newNote()">+ New Note</button>
+    <div id="note-list"></div>
+  </div>
+  <div class="editor">
+    <div class="editor-top">
+      <input class="editor-title" id="note-title" placeholder="Note title..." oninput="save()">
+      <button class="btn-sm" onclick="deleteNote()">Delete</button>
+    </div>
+    <textarea id="note-body" placeholder="Start writing..." oninput="save()"></textarea>
+  </div>
+</div>
+<script>
+const KEY='wed_notes_personal';
+let notes=JSON.parse(localStorage.getItem(KEY)||'[]');
+let cur=0;
+if(!notes.length) notes=[{title:'',body:''}];
+function renderList(){
+  document.getElementById('note-list').innerHTML=notes.map((n,i)=>
+    `<div class="note-item${i===cur?' active':''}" onclick="open(${i})"><div class="note-item-title">${n.title||'Untitled'}</div><div class="note-item-preview">${n.body||'Empty'}</div></div>`
+  ).join('');
+}
+function open(i){cur=i;document.getElementById('note-title').value=notes[i].title;document.getElementById('note-body').value=notes[i].body;renderList();}
+function save(){notes[cur]={title:document.getElementById('note-title').value,body:document.getElementById('note-body').value};localStorage.setItem(KEY,JSON.stringify(notes));renderList();}
+function newNote(){notes.push({title:'',body:''});cur=notes.length-1;localStorage.setItem(KEY,JSON.stringify(notes));open(cur);}
+function deleteNote(){if(notes.length===1){notes=[{title:'',body:''}];}else{notes.splice(cur,1);cur=Math.max(0,cur-1);}localStorage.setItem(KEY,JSON.stringify(notes));open(cur);}
+open(0);
+</script>
+</body>
+</html>

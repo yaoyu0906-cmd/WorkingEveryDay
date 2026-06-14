@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tasks — Personal</title>
+<style>
+body{margin:0;font-family:Arial;background:url("../../indexbg.jpg") no-repeat center/cover;min-height:100vh;color:white;}
+.navbar{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);}
+.logo{font-size:22px;font-weight:bold;}
+.nav-left{display:flex;align-items:center;gap:12px;}
+.badge{font-size:11px;color:#aaa;background:rgba(255,255,255,0.1);padding:3px 10px;border-radius:20px;letter-spacing:1px;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.btn{width:6.5em;height:2.3em;margin:0.3em;background:black;color:white;border:none;border-radius:0.625em;font-size:16px;font-weight:bold;cursor:pointer;position:relative;z-index:1;overflow:hidden;}
+.btn-sm{width:5em;height:2.3em;background:black;color:white;border:none;border-radius:0.625em;font-size:14px;font-weight:bold;cursor:pointer;position:relative;z-index:1;overflow:hidden;}
+.btn-add{height:2.3em;padding:0 16px;background:black;color:white;border:none;border-radius:0.625em;font-size:14px;font-weight:bold;cursor:pointer;position:relative;z-index:1;overflow:hidden;}
+.task-del{background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:13px;padding:0;line-height:1;position:relative;z-index:1;overflow:hidden;}
+.task-del:hover{color:white;background:none;}
+.task-del:after{display:none;}
+button:hover{color:black;}
+button:after{content:"";background:white;position:absolute;z-index:-1;left:-20%;right:-20%;top:0;bottom:0;transform:skewX(-45deg) scale(0,1);transition:all 0.5s;}
+button:hover:after{transform:skewX(-45deg) scale(1,1);}
+.container{padding:28px 24px 36px;max-width:720px;margin:0 auto;}
+.page-title{font-size:20px;font-weight:bold;margin:0 0 4px;text-shadow:0 1px 8px rgba(0,0,0,1);}
+.page-sub{font-size:13px;color:rgba(255,255,255,0.7);margin:0 0 16px;text-shadow:0 1px 6px rgba(0,0,0,1);}
+.add-row{display:flex;gap:8px;margin-bottom:16px;}
+.add-input{flex:1;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.15);border-radius:9px;padding:0 14px;color:white;font-size:14px;height:2.3em;outline:none;}
+.add-input::placeholder{color:rgba(255,255,255,0.3);}
+.add-input:focus{border-color:rgba(255,255,255,0.35);}
+.col-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.col{background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.12);backdrop-filter:blur(12px);border-radius:12px;padding:14px 12px;}
+.col-title{font-size:10px;text-transform:uppercase;letter-spacing:2px;font-weight:bold;color:rgba(255,255,255,0.5);margin-bottom:10px;}
+.task{background:rgba(255,255,255,0.07);border-radius:8px;padding:9px 11px;font-size:13px;margin-bottom:6px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:6px;}
+.task:hover{background:rgba(255,255,255,0.13);}
+.empty{font-size:11px;color:rgba(255,255,255,0.2);text-align:center;padding:10px 0;}
+</style>
+</head>
+<body>
+<div class="navbar">
+  <div class="nav-left">
+    <div class="logo">WorkingEveryday</div>
+    <span class="badge">🏢 helloworld</span>
+  </div>
+  <div class="nav-right">
+    <button class="btn-sm" onclick="location.href='/helloworld'">← Back</button>
+    <button class="btn" onclick="location.href='/profile'">Profile</button>
+  </div>
+</div>
+<div class="container">
+  <div class="page-title">✅ Tasks</div>
+  <div class="page-sub">Click a task to advance it · To Do → In Progress → Done</div>
+  <div class="add-row">
+    <input class="add-input" id="new-task" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTask()">
+    <button class="btn-add" onclick="addTask()">Add</button>
+  </div>
+  <div class="col-wrap">
+    <div class="col"><div class="col-title">To Do</div><div id="col-todo"></div></div>
+    <div class="col"><div class="col-title">In Progress</div><div id="col-prog"></div></div>
+    <div class="col"><div class="col-title">Done</div><div id="col-done"></div></div>
+  </div>
+</div>
+<script>
+const KEY='wed_tasks_helloworld';
+let tasks=JSON.parse(localStorage.getItem(KEY)||'{"todo":[],"prog":[],"done":[]}');
+const NEXT={todo:'prog',prog:'done',done:'todo'};
+function render(){
+  ['todo','prog','done'].forEach(function(col){
+    var el=document.getElementById('col-'+col);
+    if(!tasks[col].length){el.innerHTML='<div class="empty">Empty</div>';return;}
+    el.innerHTML=tasks[col].map(function(t,i){
+      return '<div class="task" onclick="move(\''+col+'\','+i+')"><span>'+t+'</span><button class="task-del" onclick="event.stopPropagation();del(\''+col+'\','+i+')">✕</button></div>';
+    }).join('');
+  });
+  localStorage.setItem(KEY,JSON.stringify(tasks));
+}
+function addTask(){var v=document.getElementById('new-task').value.trim();if(!v)return;tasks.todo.push(v);document.getElementById('new-task').value='';render();}
+function move(from,i){var to=NEXT[from];tasks[to].push(tasks[from].splice(i,1)[0]);render();}
+function del(col,i){tasks[col].splice(i,1);render();}
+render();
+</script>
+</body>
+</html>

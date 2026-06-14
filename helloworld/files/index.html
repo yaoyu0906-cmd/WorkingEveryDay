@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Files — Personal</title>
+<style>
+body{margin:0;font-family:Arial;background:url("../../indexbg.jpg") no-repeat center/cover;min-height:100vh;color:white;}
+.navbar{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);}
+.logo{font-size:22px;font-weight:bold;}
+.nav-left{display:flex;align-items:center;gap:12px;}
+.badge{font-size:11px;color:#aaa;background:rgba(255,255,255,0.1);padding:3px 10px;border-radius:20px;letter-spacing:1px;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.btn{width:6.5em;height:2.3em;margin:0.3em;background:black;color:white;border:none;border-radius:0.625em;font-size:16px;font-weight:bold;cursor:pointer;position:relative;z-index:1;overflow:hidden;}
+.btn-sm{width:5em;height:2.3em;background:black;color:white;border:none;border-radius:0.625em;font-size:14px;font-weight:bold;cursor:pointer;position:relative;z-index:1;overflow:hidden;}
+button:hover{color:black;}
+button:after{content:"";background:white;position:absolute;z-index:-1;left:-20%;right:-20%;top:0;bottom:0;transform:skewX(-45deg) scale(0,1);transition:all 0.5s;}
+button:hover:after{transform:skewX(-45deg) scale(1,1);}
+.container{padding:28px 24px 36px;max-width:680px;margin:0 auto;}
+.page-title{font-size:20px;font-weight:bold;margin:0 0 4px;text-shadow:0 1px 8px rgba(0,0,0,1);}
+.page-sub{font-size:13px;color:rgba(255,255,255,0.7);margin:0 0 20px;text-shadow:0 1px 6px rgba(0,0,0,1);}
+.drop-zone{background:rgba(0,0,0,0.5);border:2px dashed rgba(255,255,255,0.2);border-radius:12px;padding:24px;text-align:center;margin-bottom:14px;cursor:pointer;transition:border-color 0.2s;}
+.drop-zone:hover,.drop-zone.drag{border-color:rgba(255,255,255,0.5);}
+.drop-zone p{margin:5px 0;color:rgba(255,255,255,0.45);font-size:13px;text-shadow:none;}
+.drop-icon{font-size:26px;}
+.file-list{display:flex;flex-direction:column;gap:7px;}
+.file-row{background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(10px);border-radius:9px;padding:11px 16px;display:flex;justify-content:space-between;align-items:center;}
+.file-info{display:flex;align-items:center;gap:10px;}
+.file-icon{font-size:18px;}
+.file-name{font-size:13px;font-weight:bold;}
+.file-meta{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;}
+.empty{text-align:center;padding:28px;color:rgba(255,255,255,0.25);font-size:13px;}
+input[type=file]{display:none;}
+</style>
+</head>
+<body>
+<div class="navbar">
+  <div class="nav-left">
+    <div class="logo">WorkingEveryday</div>
+    <span class="badge">🏢 helloworld</span>
+  </div>
+  <div class="nav-right">
+    <button class="btn-sm" onclick="location.href='/helloworld'">← Back</button>
+    <button class="btn" onclick="location.href='/profile'">Profile</button>
+  </div>
+</div>
+<div class="container">
+  <div class="page-title">📁 Shared Files</div>
+  <div class="page-sub">Upload and manage your team files</div>
+  <div class="drop-zone" id="drop-zone" onclick="document.getElementById('fi').click()"
+       ondragover="event.preventDefault();this.classList.add('drag')"
+       ondragleave="this.classList.remove('drag')"
+       ondrop="handleDrop(event)">
+    <div class="drop-icon">☁️</div>
+    <p>Drop files here or click to upload</p>
+    <p style="font-size:11px;color:rgba(255,255,255,0.25)">Persistent storage requires backend</p>
+  </div>
+  <input type="file" id="fi" multiple onchange="handleSelect(this.files)">
+  <div class="file-list" id="file-list"></div>
+</div>
+<script>
+const KEY='wed_files_helloworld';
+let files=JSON.parse(localStorage.getItem(KEY)||'[]');
+const IC={'pdf':'📄','doc':'📝','docx':'📝','xls':'📊','xlsx':'📊','png':'🖼️','jpg':'🖼️','jpeg':'🖼️','mp4':'🎬','zip':'🗜️','txt':'📃'};
+function ic(n){return IC[n.split('.').pop().toLowerCase()]||'📎';}
+function sz(b){return b<1024?b+'B':b<1048576?(b/1024).toFixed(1)+'KB':(b/1048576).toFixed(1)+'MB';}
+function render(){
+  var el=document.getElementById('file-list');
+  if(!files.length){el.innerHTML='<div class="empty">No files yet — upload something!</div>';return;}
+  el.innerHTML=files.map(function(f,i){
+    return '<div class="file-row"><div class="file-info"><div class="file-icon">'+ic(f.name)+'</div><div><div class="file-name">'+f.name+'</div><div class="file-meta">'+sz(f.size)+' · '+f.date+'</div></div></div><button class="btn-sm" onclick="del('+i+')">Delete</button></div>';
+  }).join('');
+}
+function handleSelect(fl){Array.from(fl).forEach(function(f){files.push({name:f.name,size:f.size,date:new Date().toLocaleDateString()});});localStorage.setItem(KEY,JSON.stringify(files));render();}
+function handleDrop(e){e.preventDefault();document.getElementById('drop-zone').classList.remove('drag');handleSelect(e.dataTransfer.files);}
+function del(i){files.splice(i,1);localStorage.setItem(KEY,JSON.stringify(files));render();}
+render();
+</script>
+</body>
+</html>
