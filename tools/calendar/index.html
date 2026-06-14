@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Calendar — Personal</title>
+<style>
+body{margin:0;font-family:Arial;background:url("../../../indexbg.jpg") no-repeat center/cover;min-height:100vh;color:white;}
+.navbar{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);}
+.logo{font-size:22px;font-weight:bold;}
+.nav-left{display:flex;align-items:center;gap:12px;}
+.badge{font-size:11px;color:#aaa;background:rgba(255,255,255,0.1);padding:3px 10px;border-radius:20px;letter-spacing:1px;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.btn{width:6.5em;height:2.3em;margin:0.3em;background:black;color:white;border:none;border-radius:0.625em;font-size:16px;font-weight:bold;cursor:pointer;position:relative;z-index:1;overflow:hidden;}
+.btn-sm{width:5em;height:2.3em;background:black;color:white;border:none;border-radius:0.625em;font-size:14px;font-weight:bold;cursor:pointer;position:relative;z-index:1;overflow:hidden;}
+.btn-icon{width:2.3em;height:2.3em;background:rgba(0,0,0,0.6);color:white;border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:16px;cursor:pointer;position:relative;z-index:1;overflow:hidden;}
+button:hover{color:black;}
+button:after{content:"";background:white;position:absolute;z-index:-1;left:-20%;right:-20%;top:0;bottom:0;transform:skewX(-45deg) scale(0,1);transition:all 0.5s;}
+button:hover:after{transform:skewX(-45deg) scale(1,1);}
+.container{padding:28px 24px 36px;max-width:640px;margin:0 auto;}
+.page-title{font-size:20px;font-weight:bold;margin:0 0 4px;text-shadow:0 1px 8px rgba(0,0,0,1);}
+.page-sub{font-size:13px;color:rgba(255,255,255,0.7);margin:0 0 20px;text-shadow:0 1px 6px rgba(0,0,0,1);}
+.cal-card{background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.12);backdrop-filter:blur(12px);border-radius:12px;padding:20px;}
+.cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.cal-month{font-size:15px;font-weight:bold;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;}
+.cal-dow{font-size:10px;color:rgba(255,255,255,0.4);padding:4px 0;text-transform:uppercase;letter-spacing:1px;}
+.cal-day{padding:7px 4px;border-radius:7px;font-size:13px;cursor:pointer;transition:background 0.15s;}
+.cal-day:hover{background:rgba(255,255,255,0.12);}
+.cal-day.today{background:white;color:black;font-weight:bold;}
+.cal-day.other{color:rgba(255,255,255,0.2);cursor:default;}
+.cal-day.has-event::after{content:"";display:block;width:4px;height:4px;background:rgba(255,255,255,0.7);border-radius:50%;margin:2px auto 0;}
+.events{margin-top:14px;display:flex;flex-direction:column;gap:7px;}
+.event-row{background:rgba(255,255,255,0.07);border-radius:8px;padding:9px 14px;display:flex;justify-content:space-between;align-items:center;}
+.event-name{font-size:13px;font-weight:bold;}
+.event-time{font-size:11px;color:rgba(255,255,255,0.45);}
+.empty{font-size:12px;color:rgba(255,255,255,0.25);text-align:center;padding:14px 0;}
+</style>
+</head>
+<body>
+<div class="navbar">
+  <div class="nav-left">
+    <div class="logo">WorkingEveryday</div>
+    <span class="badge">🏠 Personal</span>
+  </div>
+  <div class="nav-right">
+    <button class="btn-sm" onclick="location.href='/personal/tools'">← Back</button>
+    <button class="btn" onclick="location.href='/profile'">Profile</button>
+  </div>
+</div>
+<div class="container">
+  <div class="page-title">📅 Calendar</div>
+  <div class="page-sub">Click a day to add an event</div>
+  <div class="cal-card">
+    <div class="cal-header">
+      <button class="btn-icon" onclick="changeMonth(-1)">‹</button>
+      <div class="cal-month" id="cal-month"></div>
+      <button class="btn-icon" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="events" id="events-list"></div>
+  </div>
+</div>
+<script>
+const MO=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DO=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const now=new Date();let cur=new Date(now.getFullYear(),now.getMonth(),1);
+const KEY='wed_cal_personal';
+let events=JSON.parse(localStorage.getItem(KEY)||'{}');
+function render(){
+  const y=cur.getFullYear(),m=cur.getMonth();
+  document.getElementById("cal-month").textContent=MO[m]+" "+y;
+  const grid=document.getElementById("cal-grid");
+  grid.innerHTML=DO.map(d=>`<div class="cal-dow">${d}</div>`).join("");
+  const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),prev=new Date(y,m,0).getDate();
+  for(let i=0;i<first;i++) grid.innerHTML+=`<div class="cal-day other">${prev-first+1+i}</div>`;
+  for(let d=1;d<=days;d++){
+    const k=`${y}-${m}-${d}`,isT=d===now.getDate()&&m===now.getMonth()&&y===now.getFullYear();
+    grid.innerHTML+=`<div class="cal-day${isT?' today':''}${events[k]?' has-event':''}" onclick="addEvent(${d})">${d}</div>`;
+  }
+  const rem=42-first-days;for(let i=1;i<=rem;i++) grid.innerHTML+=`<div class="cal-day other">${i}</div>`;
+  const el=document.getElementById('events-list');
+  const ks=Object.keys(events).filter(k=>k.startsWith(`${y}-${m}-`)).sort();
+  el.innerHTML=ks.length?ks.map(k=>`<div class="event-row"><div class="event-name">${events[k].name}</div><div class="event-time">${events[k].time}</div></div>`).join(''):'<div class="empty">No events this month — click a day to add one</div>';
+}
+function addEvent(d){const n=prompt("Event name:");if(!n)return;const t=prompt("Time (e.g. 10:00 AM):")||"";const k=`${cur.getFullYear()}-${cur.getMonth()}-${d}`;events[k]={name:n,time:t};localStorage.setItem(KEY,JSON.stringify(events));render();}
+function changeMonth(dir){cur=new Date(cur.getFullYear(),cur.getMonth()+dir,1);render();}
+render();
+</script>
+</body>
+</html>
